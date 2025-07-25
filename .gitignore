@@ -1,0 +1,22 @@
+# Archivos de configuración sensibles
+src/main/resources/application.properties
+
+# Directorios de compilación
+target/
+.vscode/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# Archivos de IDE
+.idea/
+*.iml
+*.iws
+
+# Archivos temporales
+*.tmp
+*.bak
+*.swp
+*~.nib

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Clientes API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .navbar {
+            background-color: #007bff;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            font-size: 1.5rem;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .tab {
+            flex: 1;
+            padding: 1rem;
+            background: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            border-bottom: 3px solid transparent;
+        }
+        .tab.active {
+            background: white;
+            border-bottom-color: #007bff;
+        }
+        .tab-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 500px;
+        }
+        .tab-pane {
+            display: none;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .search-form {
+            display: flex;
+            gap: 1rem;
+            align-items: end;
+            margin-bottom: 2rem;
+        }
+        .form-group {
+            flex: 1;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .table th, .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        .table tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>📋 Clientes API</h1>
+        <div class="user-info">
+            <span id="userName">Cargando...</span>
+            <span id="searchesLeft" class="badge">Búsquedas: 0</span>
+            <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalClients">0</div>
+                <div>Clientes Guardados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="remainingSearches">0</div>
+                <div>Búsquedas Restantes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="currentPlan">GRATUITO</div>
+                <div>Plan Actual</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('search')">🔍 Buscar DNI</button>
+            <button class="tab" onclick="showTab('clients')">👥 Mis Clientes</button>
+        </div>
+
+        <div class="tab-content">
+            <!-- Tab de Búsqueda -->
+            <div id="searchTab" class="tab-pane active">
+                <h2>🔍 Consultar DNI</h2>
+                <div id="alert" style="display: none;"></div>
+                
+                <form id="searchForm" class="search-form">
+                    <div class="form-group">
+                        <label for="dni">DNI (8 dígitos):</label>
+                        <input type="text" id="dni" name="dni" maxlength="8" pattern="[0-9]{8}" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </form>
+
+                <div id="resultSection" style="display: none;">
+                    <h3>📄 Información del Cliente</h3>
+                    <div id="clientInfo"></div>
+                </div>
+            </div>
+
+            <!-- Tab de Clientes -->
+            <div id="clientsTab" class="tab-pane">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2>👥 Mis Clientes</h2>
+                    <button class="btn btn-success" onclick="exportarExcel()">📊 Exportar Excel</button>
+                </div>
+                
+                <div id="clientsAlert" style="display: none;"></div>
+                
+                <table class="table" id="clientsTable">
+                    <thead>
+                        <tr>
+                            <th>DNI</th>
+                            <th>Nombres</th>
+                            <th>Apellido Paterno</th>
+                            <th>Apellido Materno</th>
+                            <th>Fecha Consulta</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientsTableBody">
+                        <!-- Los datos se llenarán dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar cliente -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h3>✏️ Editar Cliente</h3>
+            <form id="editForm">
+                <input type="hidden" id="editClientId">
+                <div class="form-group">
+                    <label for="editNombres">Nombres:</label>
+                    <input type="text" id="editNombres" required>
+                </div>
+                <div class="form-group">
+                    <label for="editApellidoPaterno">Apellido Paterno:</label>
+                    <input type="text" id="editApellidoPaterno" required>
+                </div>
+                <div class="form-group">
+                    <label for="editApellidoMaterno">Apellido Materno:</label>
+                    <input type="text" id="editApellidoMaterno" required>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let clientesList = [];
+
+        // Cargar información del usuario al iniciar
+        window.onload = function() {
+            const userData = localStorage.getItem('usuario');
+            if (!userData) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            currentUser = JSON.parse(userData);
+            updateUserInfo();
+            loadClients();
+        };
+
+        function updateUserInfo() {
+            document.getElementById('userName').textContent = currentUser.nombres;
+            document.getElementById('searchesLeft').textContent = `Búsquedas: ${currentUser.busquedasRestantes}`;
+            document.getElementById('remainingSearches').textContent = currentUser.busquedasRestantes;
+            document.getElementById('currentPlan').textContent = currentUser.plan;
+        }
+
+        function showTab(tabName) {
+            // Ocultar todas las pestañas
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Mostrar la pestaña seleccionada
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'clients') {
+                loadClients();
+            }
+        }
+
+        // Búsqueda de DNI
+        document.getElementById('searchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const dni = document.getElementById('dni').value;
+            
+            if (!/^\d{8}$/.test(dni)) {
+                showAlert('El DNI debe tener exactamente 8 dígitos', 'error', 'alert');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/clientes/consultar-dni', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        dni: dni, 
+                        usuarioId: currentUser.id 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    showAlert(data.mensaje, 'success', 'alert');
+                    displayClientInfo(data.cliente);
+                    
+                    // Actualizar búsquedas restantes
+                    currentUser.busquedasRestantes = data.busquedasRestantes;
+                    localStorage.setItem('usuario', JSON.stringify(currentUser));
+                    updateUserInfo();
+                    
+                    // Recargar lista de clientes
+                    loadClients();
+                } else {
+                    showAlert(data.error || 'Error en la consulta', 'error', 'alert');
+                }
+            } catch (error) {
+                showAlert('Error de conexión', 'error', 'alert');
+            }
+        });
+
+        function displayClientInfo(cliente) {
+            const clientInfoDiv = document.getElementById('clientInfo');
+            clientInfoDiv.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
+                    <div style="padding: 0.5rem; background: #f8f9fa; border-radius: 4px;">
+                        <div style="font-weight: bold; color: #666; font-size: 0.9rem;">DNI</div>
+                        <div style="font-size: 1.1rem; margin-top: 0.25rem;">${cliente.dni}</div>
+                    </div>
+                    <div style="padding: 0.5rem; background: #f8f9fa; border-radius: 4px;">
+                        <div style="font-weight: bold; color: #666; font-size: 0.9rem;">Nombres</div>
+                        <div style="font-size: 1.1rem; margin-top: 0.25rem;">${cliente.nombres}</div>
+                    </div>
+                    <div style="padding: 0.5rem; background: #f8f9fa; border-radius: 4px;">
+                        <div style="font-weight: bold; color: #666; font-size: 0.9rem;">Apellido Paterno</div>
+                        <div style="font-size: 1.1rem; margin-top: 0.25rem;">${cliente.apellidoPaterno}</div>
+                    </div>
+                    <div style="padding: 0.5rem; background: #f8f9fa; border-radius: 4px;">
+                        <div style="font-weight: bold; color: #666; font-size: 0.9rem;">Apellido Materno</div>
+                        <div style="font-size: 1.1rem; margin-top: 0.25rem;">${cliente.apellidoMaterno}</div>
+                    </div>
+                    <div style="padding: 0.5rem; background: #f8f9fa; border-radius: 4px;">
+                        <div style="font-weight: bold; color: #666; font-size: 0.9rem;">Código Verificación</div>
+                        <div style="font-size: 1.1rem; margin-top: 0.25rem;">${cliente.codigoVerificacion}</div>
+                    </div>
+                    <div style="padding: 0.5rem; background: #f8f9fa; border-radius: 4px;">
+                        <div style="font-weight: bold; color: #666; font-size: 0.9rem;">Fecha Consulta</div>
+                        <div style="font-size: 1.1rem; margin-top: 0.25rem;">${new Date(cliente.fechaConsulta).toLocaleString()}</div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('resultSection').style.display = 'block';
+        }
+
+        // Cargar lista de clientes
+        async function loadClients() {
+            try {
+                const response = await fetch(`/api/clientes/usuario/${currentUser.id}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    clientesList = data.clientes;
+                    displayClientsTable();
+                    document.getElementById('totalClients').textContent = clientesList.length;
+                } else {
+                    showAlert('Error al cargar clientes', 'error', 'clientsAlert');
+                }
+            } catch (error) {
+                showAlert('Error de conexión', 'error', 'clientsAlert');
+            }
+        }
+
+        function displayClientsTable() {
+            const tbody = document.getElementById('clientsTableBody');
+            tbody.innerHTML = '';
+            
+            clientesList.forEach(cliente => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${cliente.dni}</td>
+                    <td>${cliente.nombres}</td>
+                    <td>${cliente.apellidoPaterno}</td>
+                    <td>${cliente.apellidoMaterno}</td>
+                    <td>${new Date(cliente.fechaConsulta).toLocaleDateString()}</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="editClient(${cliente.id})">✏️ Editar</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteClient(${cliente.id})">🗑️ Eliminar</button>
+                    </td>
+                `;
+            });
+        }
+
+        // Editar cliente
+        function editClient(clientId) {
+            const cliente = clientesList.find(c => c.id === clientId);
+            if (cliente) {
+                document.getElementById('editClientId').value = cliente.id;
+                document.getElementById('editNombres').value = cliente.nombres;
+                document.getElementById('editApellidoPaterno').value = cliente.apellidoPaterno;
+                document.getElementById('editApellidoMaterno').value = cliente.apellidoMaterno;
+                document.getElementById('editModal').style.display = 'block';
+            }
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // Guardar cambios del cliente
+        document.getElementById('editForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const clientId = document.getElementById('editClientId').value;
+            const clienteActualizado = {
+                nombres: document.getElementById('editNombres').value,
+                apellidoPaterno: document.getElementById('editApellidoPaterno').value,
+                apellidoMaterno: document.getElementById('editApellidoMaterno').value
+            };
+            
+            try {
+                const response = await fetch(`/api/clientes/${clientId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(clienteActualizado)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showAlert(data.mensaje, 'success', 'clientsAlert');
+                    closeEditModal();
+                    loadClients();
+                } else {
+                    showAlert(data.error || 'Error al actualizar cliente', 'error', 'clientsAlert');
+                }
+            } catch (error) {
+                showAlert('Error de conexión', 'error', 'clientsAlert');
+            }
+        });
+
+        // Eliminar cliente
+        async function deleteClient(clientId) {
+            if (confirm('¿Estás seguro de que quieres eliminar este cliente?')) {
+                try {
+                    const response = await fetch(`/api/clientes/${clientId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        showAlert(data.mensaje, 'success', 'clientsAlert');
+                        loadClients();
+                    } else {
+                        showAlert(data.error || 'Error al eliminar cliente', 'error', 'clientsAlert');
+                    }
+                } catch (error) {
+                    showAlert('Error de conexión', 'error', 'clientsAlert');
+                }
+            }
+        }
+
+        // Exportar a Excel
+        async function exportarExcel() {
+            try {
+                const response = await fetch(`/api/clientes/exportar-excel/${currentUser.id}`);
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = 'clientes.xlsx';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    showAlert('Excel exportado exitosamente', 'success', 'clientsAlert');
+                } else {
+                    showAlert('Error al exportar Excel', 'error', 'clientsAlert');
+                }
+            } catch (error) {
+                showAlert('Error de conexión', 'error', 'clientsAlert');
+            }
+        }
+
+        function showAlert(message, type, alertId) {
+            const alertDiv = document.getElementById(alertId);
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            alertDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function logout() {
+            localStorage.removeItem('usuario');
+            window.location.href = '/login';
+        }
+    </script>
+</body>
+</html>

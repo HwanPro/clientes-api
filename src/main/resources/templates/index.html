@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes API - Consulta DNI Perú</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .hero {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            margin: 0.5rem;
+        }
+        .btn:hover {
+            background: #218838;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+        }
+        .btn-outline:hover {
+            background: white;
+            color: #007bff;
+        }
+        .features {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .features h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .pricing {
+            background: #f8f9fa;
+            padding: 4rem 2rem;
+        }
+        .pricing h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .pricing-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+            margin: 1rem 0;
+        }
+        .footer {
+            background: #343a40;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <h1>🇵🇪 Clientes API</h1>
+        <p>Consulta información de DNI de manera rápida y segura usando la API oficial de RENIEC</p>
+        <a href="/registro" class="btn">Comenzar Gratis</a>
+        <a href="/login" class="btn btn-outline">Iniciar Sesión</a>
+    </section>
+
+    <section class="features">
+        <h2>¿Por qué elegir Clientes API?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Consultas Rápidas</h3>
+                <p>Obtén información de DNI en segundos usando la API oficial de RENIEC</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>100% Seguro</h3>
+                <p>Tus datos están protegidos con encriptación de nivel empresarial</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Exporta a Excel</h3>
+                <p>Descarga tus consultas en formato Excel para análisis posterior</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💾</div>
+                <h3>Historial Completo</h3>
+                <p>Mantén un registro de todas tus consultas organizadas por fecha</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Fácil de Usar</h3>
+                <p>Interfaz intuitiva diseñada para maximizar tu productividad</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Responsive</h3>
+                <p>Accede desde cualquier dispositivo: PC, tablet o móvil</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing">
+        <h2>Planes y Precios</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Gratuito</h3>
+                <div class="price">S/ 0</div>
+                <ul style="text-align: left; margin: 1rem 0;">
+                    <li>✅ 5 consultas por mes</li>
+                    <li>✅ Acceso básico</li>
+                    <li>✅ Exportar a Excel</li>
+                    <li>❌ Soporte prioritario</li>
+                </ul>
+                <a href="/registro" class="btn">Empezar Gratis</a>
+            </div>
+            <div class="pricing-card">
+                <h3>Básico</h3>
+                <div class="price">S/ 29</div>
+                <ul style="text-align: left; margin: 1rem 0;">
+                    <li>✅ 100 consultas por mes</li>
+                    <li>✅ Historial completo</li>
+                    <li>✅ Exportar a Excel</li>
+                    <li>✅ Soporte por email</li>
+                </ul>
+                <a href="/registro" class="btn">Elegir Plan</a>
+            </div>
+            <div class="pricing-card">
+                <h3>Premium</h3>
+                <div class="price">S/ 99</div>
+                <ul style="text-align: left; margin: 1rem 0;">
+                    <li>✅ 1000 consultas por mes</li>
+                    <li>✅ API personalizada</li>
+                    <li>✅ Exportar a Excel</li>
+                    <li>✅ Soporte prioritario</li>
+                </ul>
+                <a href="/registro" class="btn">Elegir Plan</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2024 Clientes API. Todos los derechos reservados.</p>
+        <p>Desarrollado con ❤️ para facilitar tus consultas de DNI</p>
+    </footer>
+</body>
+</html>
