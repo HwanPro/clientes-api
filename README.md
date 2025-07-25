@@ -21,7 +21,22 @@ Sistema web completo para consulta de información de DNI utilizando la API ofic
 - **Autenticación**: BCrypt para encriptación de contraseñas
 - **API Externa**: API Peru Dev para consultas RENIEC
 
-## 📋 Requisitos
+## 📋 Requisitos# Database Configuration
+spring.datasource.url=jdbc:mysql://localhost:3306/clientes_app
+spring.datasource.username=tu_usuario
+spring.datasource.password=tu_contraseña
+
+# API Peru Dev Configuration
+apiperu.token=tu_token_api_peru_dev# Archivos de configuración sensibles
+src/main/resources/application.properties
+
+# Directorios de compilación
+target/
+.vscode/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
 
 - Java 17 o superior
 - Maven 3.6+
@@ -178,7 +193,7 @@ mvn clean compile
 ## 📞 Soporte
 
 Para soporte técnico o consultas:
-- Email: soporte@clientesapi.com
+- Email: 168.1.2.0.20a@gmail.com
 - Documentación: [API Peru Dev](https://apiperu.dev)
 
 ## 📄 Licencia
